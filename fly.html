@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Fly Through</title>
+    <meta name="description" content="Fly Through - A-Frame">
+    <script src="aframe.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <a-entity>
+        <a-animation attribute="position" from="0 0 10" to="0 0 -10" dur="10000"
+                     easing="linear"></a-animation>
+       <a-entity camera look-controls wasd-controls><a-entity position="0 0 -3"
+                geometry="primitive: ring; radiusOuter: 0.30;
+                          radiusInner: 0.20;"
+                material="color: cyan; shader: flat"
+                cursor="maxDistance: 30; fuse: true">
+        <a-animation begin="cursor-click" easing="ease-in" attribute="scale"
+               fill="backwards" from="0.1 0.1 0.1" to="1 1 1"></a-animation>
+  <a-animation begin="cursor-fusing" easing="ease-in" attribute="scale"
+               fill="forwards" from="1 1 1" to="0.1 0.1 0.1">+</a-animation>
+      </a-entity></a-entity>
+      </a-entity>
+
+      <a-entity>
+        <a-box position="2 0 0" width="1" height="1" depth="1" thickness="0.2"
+               color="#08A1E7">
+                 <a-event name="cursor-mouseenter" color="#FFC65D" scale="3 3 3"></a-event>
+                 <a-event name="cursor-mouseleave" color="#08A1E7" scale="1 1 1"></a-event>
+               </a-box>
+        <a-box position="-5 0 2" width="1" height="1" depth="1" thickness="0.2"
+               color="#301626">
+                 <a-event name="cursor-mouseenter" color="#FFC65D" scale="3 3 3"></a-event>
+                 <a-event name="cursor-mouseleave" color="#08A1E7" scale="1 1 1"></a-event>
+               </a-box>
+
+        <a-entity id="hallway" scale="2 2 20">
+          <a-plane position="0 5 0" width="10" height="10" rotation="90 0 0"
+                   color="#180a13"></a-plane>
+          <a-plane position="0 -5 0" width="10" height="10" rotation="-90 0 0"
+                   color="#180a13"></a-plane>
+          <a-plane position="5 0 0" width="10" height="10" rotation="0 -90 90"
+                   color="#180a13"></a-plane>
+          <a-plane position="-5 0 0" width="10" height="10" rotation="0 90 90"
+                   color="#180a13"></a-plane>
+        </a-entity>
+      </a-entity>
+
+      <a-image position="0 -1 0" src="shadow2.png" rotation="-90 0 0" scale="6 6 6"></a-image>
+      <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+        <script>
+    //   AFRAME.registerComponent('click-color-change', {
+    //   init: function () {
+    //     var COLORS = ['red', 'green', 'blue'];
+    //     this.el.addEventListener('cursor-click', function () {
+    //       var randomIndex = Math.floor(Math.random() * COLORS.length);
+    //       this.setAttribute('material', 'color', COLORS[randomIndex]);
+    //       console.log('I was clicked!');
+    //     });
+    //   }
+    // });
+    </script>
+  </body>
+</html>
