@@ -5,6 +5,7 @@
     <title>Fly Through</title>
     <meta name="description" content="Cursor - A-Frame">
     <script src="aframe.js"></script>
+    <script src="../js/aframe-text-component.js"></script>
     <script type="text/javascript">
     </script>
   </head>
@@ -91,6 +92,14 @@
         <a-entity position="-0.7 0 0"><a-plane width="0.2" height="0.2" src="#num3"></a-plane></a-entity>
 
       </a-entity>
+
+      <a-entity text="text: What's up;size:0.2" material="color: #5F818A"></a-entity>
+
+      <a-entity id="happy" position="0 2 -10">
+        <a-entity mixin="red" line="path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
+        <a-entity mixin="red" line="path: 1 1 0, 1 0.5 0, 1 0 0"></a-entity>
+        <a-entity mixin="red" line="path: -2 -1 0, 0 -2 0, 2 -1"></a-entity> 
+      </a-entity> 
     </a-scene>
     <script>
     (function(){  
@@ -153,6 +162,7 @@
       //   el.isPlaying = true;
       //   el.appendChild(animationEl);
       // }
+
         var bluecube=document.querySelector('#bluecube');
         var yellowcube=document.querySelector('#yellowcube');
         var greencube=document.querySelector('#greencube');
