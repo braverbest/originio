@@ -2,18 +2,148 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Fly Through</title>
+    <title>Shopping</title>
     <meta name="description" content="Cursor - A-Frame">
+    <link rel="stylesheet" href="css/style.css"/>
     <script src="aframe.js"></script>
     <script src="../js/aframe-text-component.js"></script>
     <script type="text/javascript">
     </script>
   </head>
   <body>
-  <canvas id="myCanvas"></canvas>
+  <script>
+    AFRAME.registerComponent('loading',{
+      schema:{
+        on:{default:''}
+      },
+      update:function(){
+        var entity=this.el;
+        entity.setAttribute('mixin',"blue mybox");
+        entity.setAttribute('rotation',"45 45 45")
+        var animation1=document.createElement('a-animation');
+        animation1.setAttribute("attribute","rotation");
+        animation1.setAttribute("dur",500);
+        animation1.setAttribute("fill","forwards");
+        animation1.setAttribute("to","45 360 45");
+        animation1.setAttribute("repeat","indefinite");
+        entity.appendChild(animation1);
+        var animation2=document.createElement('a-animation');
+        animation2.setAttribute("attribute","position");
+        animation2.setAttribute("dur",5000);
+        animation2.setAttribute("from","-3 0 0");
+        animation2.setAttribute("to","0 0 0");
+        entity.appendChild(animation2);
+        entity.play();
+        this.el.sceneEl.appendChild(entity);
+        setInterval(function(){
+          this.remove();
+        }.bind(this),3500);
+      },
+      remove:function(){
+        var endEl = document.querySelector('.end-screen');
+        endEl.style.display = 'block';
+      }
+    })
+
+    AFRAME.registerComponent('products',{
+      schema:{
+        on: { default: 'click' },
+        mixin:{ default: ''},
+        price:{ default: 20},
+        quantity:{ default: 1}
+      },
+      update:function(){
+        if(this.data.mixin!=''){
+          var el = this.el;
+          this.price=this.data.price;
+          this.quantity=this.data.quantity;
+          var position = new THREE.Vector3(-2.8,1,0);
+          var entity = document.createElement('a-entity');
+          entity.setAttribute('position',position);
+          var pricestring="Price   \:$"+this.data.price;
+          entity.setAttribute('text',"text:"+pricestring+";size:0.3");
+          entity.setAttribute('material',"color:#5F818A");
+
+          var entity2=document.createElement('a-entity');
+          var position2=new THREE.Vector3(-2.8,0.6,0);
+          entity2.setAttribute('position',position2);
+          var quantitystring="Quantity\:   "+this.data.quantity;
+          entity2.setAttribute('text',"text:"+quantitystring+";size:0.3");
+          entity2.setAttribute('material',"color:#5F818A");
+
+          var entitytotalprice=document.createElement('a-entity');
+          entitytotalprice.setAttribute('position',new THREE.Vector3(-2.8,0.2,0));
+          var totalpricestring="Total   \:$"+this.data.price*this.data.quantity.toFixed(2);
+          entitytotalprice.setAttribute('text',"text:"+totalpricestring+";size:0.3");
+          entitytotalprice.setAttribute('material',"color:#5F818A");
+
+          document.querySelector("#cloth").setAttribute('visible',true);
+
+          var entityplus=document.createElement('a-entity');
+          entityplus.setAttribute('mixin','plus');
+          entityplus.addEventListener('cursor-click',function(){
+            this.data.quantity++;
+            quantitystring="Quantity\:   "+this.data.quantity;
+            entity2.setAttribute('text',"text:"+quantitystring+";size:0.3");
+            totalpricestring="Total   \:$"+this.data.price*this.data.quantity.toFixed(2);
+            entitytotalprice.setAttribute('text',"text:"+totalpricestring+";size:0.3");
+          }.bind(this));
+
+          var entitysub=document.createElement('a-entity');
+          entitysub.setAttribute('mixin','sub');
+          entitysub.addEventListener('cursor-click',function(){
+            this.data.quantity--;
+            quantitystring="Quantity\:   "+this.data.quantity;
+            entity2.setAttribute('text',"text:"+quantitystring+";size:0.3");
+            totalpricestring="Total   \:$"+this.data.price*this.data.quantity.toFixed(2);
+            entitytotalprice.setAttribute('text',"text:"+totalpricestring+";size:0.3");
+          }.bind(this));
+
+          var entityBuy=document.createElement('a-entity');
+          entityBuy.setAttribute('mixin',"red buy");
+          entityBuy.material={"opacity":1};
+          var buyanimation=document.createElement('a-animation');
+          buyanimation.setAttribute('attribute','material.opacity');
+          buyanimation.setAttribute('begin','fade');
+          buyanimation.setAttribute('dur','5000');
+          buyanimation.setAttribute('to','0.2');
+          buyanimation.setAttribute('repeat','indefinite');
+          entityBuy.appendChild(buyanimation);
+          entityBuy.addEventListener('cursor-click',function(){
+            entityBuy.setAttribute('visible',false);
+            var loading=document.createElement('a-entity');
+            loading.setAttribute("loading","on:hit");
+            this.el.sceneEl.appendChild(loading);
+          }.bind(this));
+
+          
+
+          el.sceneEl.appendChild(entity);
+          el.sceneEl.appendChild(entity2);
+          el.sceneEl.appendChild(entityplus);
+          el.sceneEl.appendChild(entitysub);
+          el.sceneEl.appendChild(entitytotalprice);
+          el.sceneEl.appendChild(entityBuy);
+
+        }
+
+      }
+
+    })
+  </script>
+    <div class="screen end-screen">
+      <div class="end">You Have Bought the Product!Congradulations!</div>
+      <div class="end">Made with <a href="http://www.aframevr.io">A-FRAME</a></div>
+    </div>
     <a-scene>
+<!--       <div class="screen title-screen">
+      <div class="title">VR-BuyIng</div>
+      <div class="start blink">Click to Start</div>
+      <div class="instructions">AD keys to move and click to shoot</div>
+      </div> -->
       <a-assets>
         <a-mixin id="cube" geometry="primitive:box"></a-mixin>
+        <a-mixin id="mybox" geometry="primitive:box;width:0.3;height:0.3;depth:0.3"></a-mixin>
         <a-mixin id="red" material="color: #F35F5F"></a-mixin>
         <a-mixin id="blue" material="color: #36A3EB"></a-mixin>
         <a-mixin id="green" material="color: #9DE0AD"></a-mixin>
@@ -32,7 +162,13 @@
         <img id="num2" src="../img/2.jpg">
         <img id="num3" src="../img/3.jpg">
         <img id="space" src="../img/spaceSky.jpg">
-        <a-asset-item id="num11" src="../models/1.x3d"></a-asset-item>
+        <img id="clothimg" src="../img/cloth.jpg" >
+        <a-asset-item id="mancloth" src="../models/man.obj"></a-asset-item>
+        <a-asset-item id="manclothmtl" src="../models/man.mtl"></a-asset-item>
+        <a-mixin id="sub" text="text:-;size:0.3" position="-1.0 0.6 0" material="color:#5F818A"></a-mixin>
+        <a-mixin id="plus" text="text:+;size:0.3" position="-0.5 0.6 0" material="color:#5F818A"></a-mixin>
+        <a-mixin id="buy" text="text:Buy Now!;size:0.3" position="-2.8 -0.2 0">
+        <a-mixin id="loadanimation" loading="on:hit">
       </a-assets>
       <a-sky src="#space"></a-sky>
       <a-entity position="0 2.2 4">
@@ -74,32 +210,39 @@
         <a-animation begin="cursor-click" attribute="scale" from="1 1 1" to="1.2 1.2 1.2" dur="1000"></a-animation>
       </a-plane></a-entity>
       <!-- <a-entity position="0 0 0"><a-obj-model src="#num11"></a-obj-model></a-entity> -->
-      <a-entity id="numbers" visible="false">
-        <a-entity position="-1.5 2.2 0"><a-plane id="price" width="3.6" height="3" src="#priceimg" visible="false"></a-plane>
+      <!-- <a-entity id="numbers">
+        <a-entity position="-1.5 2.2 0"><a-plane id="price" width="3.6" height="3" src="#priceimg"></a-plane>
         </a-entity>
-        <a-entity position="-1.5 0.55 0"><a-plane id="quantity" width="3.6" height="0.45" src="#quantityimg" visible="false"></a-plane></a-entity>
+        <a-entity position="-1.5 0.55 0"><a-plane id="quantity" width="3.6" height="0.45" src="#quantityimg"></a-plane></a-entity>
 
-<!--         <a-entity position="-1.7 0.35 0"><a-plane width="0.3" height="0.05" color="#000000"></a-plane></a-entity> -->
         <a-entity position="-1.5 0.2 0"><a-ring radius-inner="0.04" radius-outer="0.08" color="#36A3EB"></a-ring></a-entity>
         <a-entity position="-1.5 0 0"><a-plane width="0.2" height="0.2" src="#num1"></a-plane></a-entity>
 
-<!--         <a-entity position="-1.1 0.35 0"><a-plane width="0.3" height="0.05" color="#000000"></a-plane></a-entity> -->
         <a-entity position="-1.1 0.2 0"><a-ring radius-inner="0.04" radius-outer="0.08" color="#36A3EB"></a-ring></a-entity>
         <a-entity position="-1.1 0.0 0"><a-plane width="0.2" height="0.2" src="#num2"></a-plane></a-entity>
 
-<!--         <a-entity position="-0.7 0.35 0"><a-plane width="0.3" height="0.05" color="#000000"></a-plane></a-entity> -->
         <a-entity position="-0.7 0.2 0"><a-ring radius-inner="0.04" radius-outer="0.08" color="#36A3EB"></a-ring></a-entity>
         <a-entity position="-0.7 0 0"><a-plane width="0.2" height="0.2" src="#num3"></a-plane></a-entity>
 
       </a-entity>
-
-      <a-entity text="text: What's up;size:0.2" material="color: #5F818A"></a-entity>
-
-      <a-entity id="happy" position="0 2 -10">
-        <a-entity mixin="red" line="path: -1 1 0, -1 0.5 0, -1 0 0"></a-entity>
-        <a-entity mixin="red" line="path: 1 1 0, 1 0.5 0, 1 0 0"></a-entity>
-        <a-entity mixin="red" line="path: -2 -1 0, 0 -2 0, 2 -1"></a-entity> 
-      </a-entity> 
+ -->
+      <!-- <a-entity text="text: What's up;size:0.2" material="color: #5F818A"></a-entity> -->
+      <!-- <a-obj-model id="clothobj"  scale="1 1 1" src="#mancloth" mtl="#manclothmtl" visible="true" position="-1.8 1.6 0"></a-obj-model> -->
+      <a-plane id="cloth" src="#clothimg" position="-1.8 2.4 0" width="2" height="2" visible="false"></a-plane>
+      <a-entity id="myproduct" products></a-entity>
+      <!-- <a-entity id="mycube" mixin="blue mybox" rotation="45 45 45"><a-animation attribute="rotation"
+               dur="500"
+               fill="forwards"
+               to="45 360 45"
+               repeat="indefinite"></a-animation>
+               <a-animation attribute="position" dur="5000" from="-3 0 0" to="0 0 0"></a-animation></a-entity> -->
+ <!--  <a-entity collada-model="#mancloth"></a-entity> -->
+      <a-entity mixin="red buy" id="fading-cube" material="opacity: 1" visible="false">
+      <a-animation attribute="material.opacity" begin="fade" dur="5000" to="0.2" repeat="indefinite"></a-animation>
+      </a-entity>
+<!--       <a-entity   geometry="primitive: box" material="opacity: 1">
+        <a-animation attribute="material.opacity" begin="fade" to="0.2" dur="5000" repeat="indefinite"></a-animation>
+      </a-entity> -->
     </a-scene>
     <script>
     (function(){  
@@ -162,7 +305,10 @@
       //   el.isPlaying = true;
       //   el.appendChild(animationEl);
       // }
-
+        // setInterval(
+        //   function(){
+        //     document.querySelector('#fading-cube').emit('fade');
+        // },2000);
         var bluecube=document.querySelector('#bluecube');
         var yellowcube=document.querySelector('#yellowcube');
         var greencube=document.querySelector('#greencube');
@@ -171,10 +317,9 @@
         var price=document.querySelector('#price');
         var quantity = document.querySelector('#quantity');
         var numbers=document.querySelector('#numbers');
-        var numrings=document.querySelectorAll('a-ring');
-        var numring1=numrings[0];
-        var numring2=numrings[1];
-        var numring3=numrings[2];
+        // var clothobj=document.querySelector('#clothobj');
+        var myproduct=document.querySelector('#myproduct');
+        var mycube=document.querySelector('#mycube');
         var status=0;
         document.addEventListener('cursor-click',function(e){
           if((!yellowcube.isPlaying)&&(!bluecube.isPlaying)&&(!redcube.isPlaying)&&(!greencube.isPlaying)){
@@ -189,9 +334,8 @@
                 yellowcube.setAttribute('visible',false);
                 redcube.setAttribute('visible',false);
                 greencube.setAttribute('position','-2 2 1');
-                price.setAttribute('visible',true);
-                quantity.setAttribute('visible',true);
-                numbers.setAttribute('visible',true);
+                myproduct.setAttribute('products','mixin:greencube;price:30;');
+                // clothobj.setAttribute('visible',true);
               }else{
                 yellowcube.setAttribute('visible', true);
                 setInterval(function(){
@@ -207,9 +351,8 @@
                 greencube.setAttribute('visible',false);
                 redcube.setAttribute('visible',false);
                 yellowcube.setAttribute('position','-2 2 1');
-                price.setAttribute('visible',true);
-                quantity.setAttribute('visible',true);
-                numbers.setAttribute('visible',true);
+                myproduct.setAttribute('products','mixin:yellowcube;price:20;');
+                // clothobj.setAttribute('visible',true);
               }else{
                 bluecube.setAttribute('visible', true);
                 setInterval(function(){
@@ -225,9 +368,8 @@
                 greencube.setAttribute('visible',false);
                 redcube.setAttribute('visible',false);
                 bluecube.setAttribute('position','-2 2 1');
-                price.setAttribute('visible',true);
-                quantity.setAttribute('visible',true);
-                numbers.setAttribute('visible',true);
+                myproduct.setAttribute('products','mixin:bluecube;price:10;');
+                // clothobj.setAttribute('visible',true);
               }else{
                 redcube.setAttribute('visible', true);
                 setInterval(function(){
@@ -242,9 +384,8 @@
                 greencube.setAttribute('visible',false);
                 bluecube.setAttribute('visible',false);
                 redcube.setAttribute('position','-2 2 1');
-                price.setAttribute('visible',true);
-                quantity.setAttribute('visible',true);
-                numbers.setAttribute('visible',true);
+                myproduct.setAttribute('products','mixin:bluecube;price:40;');
+                // clothobj.setAttribute('visible',true);
               }else{
                 redcube.isPlaying=false;
               }              
@@ -257,25 +398,9 @@
                 cart.setAttribute('src','#addtocart');
               break;
             }
-            case numring1:{
-              numring1.setAttribute('color','#F35F5F');
-              numring2.setAttribute('color','#36A3EB');
-              numring3.setAttribute('color','#36A3EB');
-              break;
+            case myproduct:{
+              myproduct.setAttribute('products','mixin:cube;on:cursor-click');
             }
-            case numring2:{
-              numring1.setAttribute('color','#36A3EB');
-              numring2.setAttribute('color','#F35F5F');
-              numring3.setAttribute('color','#36A3EB');
-              break;
-            }
-            case numring3:{
-              numring1.setAttribute('color','#36A3EB');
-              numring2.setAttribute('color','#36A3EB');
-              numring3.setAttribute('color','#F35F5F');
-              break;
-            }
-
           }
 
         })
