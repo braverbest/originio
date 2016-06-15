@@ -5,7 +5,7 @@
     <title>Hello, World! • A-Frame</title>
     <meta name="description" content="Hello, World! • A-Frame">
 <!--     <script src="../js/three.js"></script> -->
-    <script src="js/aframe-core.js"></script>
+    <script src="aframe.js"></script>
     <!-- <script src="js/components/wasd-controls.js"></script> -->
   </head>
   <body>
@@ -55,29 +55,37 @@
       AFRAME.registerComponent('loadingline',{
         schema:{
           speed:{default:0.02},
-          mytest:{default:true}
+          xposition:{default:0},
+          yposition:{default:1},
+          radius:{default:1}
         },
         init:function(){
-          this.el.sceneEl.addBehavior(this);
-          setInterval(function(){
-             this.data.mytest=false;
-          }.bind(this),600);
+          
         },
         update:function(){
-          var object3D = this.el.object3D;
-          // object3D.translateX(-this.data.speed);
-          // object3D.translateY(-this.data.speed);
-          if(this.data.mytest){
-            object3D.translateOnAxis(new THREE.Vector3( -1,-1, 0 ),0.01);
-            new THREE.Line("")
-          }
+          this.draw();
+        },
+        draw:function(){
+          var el=this.el;
+          var geometry=new THREE.Geometry();
+          var material=new THREE.LineBasicMaterial({ vertexColors: true });
+          var color1=new THREE.Color(0x444444), color2 = new THREE.Color( 0xFF0000 );
+
+          var p1=new THREE.Vector3(this.xposition,this.yposition,0);
+          var p2=new THREE.Vector3(this.xposition+0.1,this.yposition+0.1,0);
+          geometry.vertices.push(p1);
+          geometry.vertices.push(p2);
+          geometry.colors.push(color1,color2);
+
+          var line=new THREE.Line(geometry,material,THREE.LinePieces);
+          el.appendChild(line);
+        }
 
           // var a=setInterval(function(){
           //    object3D.translateOnAxis(new THREE.Vector3( -1,-1, 0 ),0.01);
           //    clearInterval(a);
           // },200);
-
-        }
+          //}
       })
 
       AFRAME.registerComponent('spawner',{
@@ -117,12 +125,12 @@
                  loadingline></a-mixin>
         <a-mixin id="cube" geometry="primitive:box" material="color:blue;"></a-mixin>
       </a-assets>
-  <a-entity mixin="cube"
+<!--   <a-entity mixin="cube"
                 wasd-controls="acceleration: 400; wsEnabled: false"
                 position="0 0 -10"
                 spawner="mixin: laser; on: mousedown"
                 cursor></a-entity>
-                <a-entity mixin="laser" position="1 1 1"></a-entity>
+                <a-entity mixin="laser" position="1 1 1"></a-entity> -->
 
   <!-- <a-entity geometry="primitive: circle; radius: 10; segments: 64" material="color: #F79F24" position="0 0 -12"></a-entity>
   <a-entity id="happy" position="0 2 -10">
@@ -130,9 +138,8 @@
         <a-entity mixin="red" line="path: 1 1 0, 1 0.5 0, 1 0 0"></a-entity>
         <a-entity mixin="red" line="path: -2 -1 0, 0 -2 0, 2 -1"></a-entity> 
       </a-entity>  -->
-      
+      <a-entity></a-entity>
       <a-sky color="#ECECEC"></a-sky>
     </a-scene>
-
   </body>
 </html>

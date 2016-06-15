@@ -59583,11 +59583,6 @@ var proto = Object.create(ANode.prototype, {
       if (obj instanceof THREE.Object3D) {
         obj.el = this;
         this.object3D.add(obj);
-        // if (obj.children.length) {
-        //   obj.traverse(function bindEl (child) {
-        //     child.el = self;
-        //   });
-        // }
       }
       this.object3DMap[type] = obj;
     }

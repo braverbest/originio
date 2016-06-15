@@ -84,7 +84,7 @@
 
           var entityplus=document.createElement('a-entity');
           entityplus.setAttribute('mixin','plus');
-          entityplus.addEventListener('cursor-click',function(){
+          entityplus.addEventListener('click',function(){
             this.data.quantity++;
             quantitystring="Quantity\:   "+this.data.quantity;
             entity2.setAttribute('text',"text:"+quantitystring+";size:0.3");
@@ -94,7 +94,7 @@
 
           var entitysub=document.createElement('a-entity');
           entitysub.setAttribute('mixin','sub');
-          entitysub.addEventListener('cursor-click',function(){
+          entitysub.addEventListener('click',function(){
             this.data.quantity--;
             quantitystring="Quantity\:   "+this.data.quantity;
             entity2.setAttribute('text',"text:"+quantitystring+";size:0.3");
@@ -112,7 +112,7 @@
           buyanimation.setAttribute('to','0.2');
           buyanimation.setAttribute('repeat','indefinite');
           entityBuy.appendChild(buyanimation);
-          entityBuy.addEventListener('cursor-click',function(){
+          entityBuy.addEventListener('click',function(){
             entityBuy.setAttribute('visible',false);
             var loading=document.createElement('a-entity');
             loading.setAttribute("loading","on:hit");
@@ -138,11 +138,20 @@
       schema:{on:{default:''}},
       update:function(previousData){
         var el=this.el;
-        var explode=this.handler=this.explode.bind(this);
-        // if(previousData){
-        //   el.removeEventListener(previousData.on,explode);
-        // }
-        el.addEventListener(this.data.on,explode);
+        var mesh = this.el.getObject3D('mesh');
+        var particle=document.querySelector('#particle');
+        // mesh.remove(particle);
+        // el.sceneEl.remove(mesh);
+        // particle.removeAttribute("particle-system");
+        // this.remove(particle.object3D);
+
+
+        // var el=this.el;
+        // var explode=this.handler=this.explode.bind(this);
+        // // if(previousData){
+        // //   el.removeEventListener(previousData.on,explode);
+        // // }
+        // el.addEventListener(this.data.on,explode);
       },
       explode:function(){
         var mesh = this.el.getObject3D('mesh');
@@ -230,6 +239,9 @@
           // pieces.rotation.set(0,0,0);
           // return pieces;
         }
+      },
+      remove:function(value){        
+        this.el.sceneEl.removeObject3D(value);
       }
     })
 
@@ -408,7 +420,7 @@
         <a-mixin id="ring" geometry="primitive: ring; radiusOuter: 0.20;
                           radiusInner: 0.15;"
                 material="color: cyan; shader: flat"
-                cursor=" fuse: true"></a-mixin>
+                cursor=" fuse: true;maxDistance: 30;"></a-mixin>
         <a-mixin id="sphere" geometry="primitive:sphere"></a-mixin>
         <a-mixin id="black" material="color:#000000"></a-mixin>
         <img id="addtocart" src="../img/addtocart.png">
@@ -426,66 +438,57 @@
         <a-mixin id="plus" text="text:+;size:0.3" position="-0.5 0.6 0" material="color:#5F818A"></a-mixin>
         <a-mixin id="buy" text="text:Buy Now!;size:0.3" position="-2.8 -0.2 0">
         <a-mixin id="loadanimation" loading="on:hit">
-        <a-mixin id="enemy"  explode="on: cursor-click"></a-mixin>
+        <a-mixin id="enemy"  explode="on: click"></a-mixin>
       </a-assets>
       <a-sky src="#space"></a-sky>
-      <a-entity position="0 2.25 -15" particle-system="preset: default; texture: ./img/star2.png; color: #0000FF,#00FF00,#FF0000"></a-entity>
+
+      <!-- 粒子系统 -->
+      <!--       particle-system="preset: default; texture: ./img/star2.png; color: #0000FF,#00FF00,#FF0000;maxParticleCount:100;rotationAngle:1.57"  rotationAxis:x的话是z方向，z的话是x方向-->
+      <a-entity position="-5 2.2 -10"  id="particle" ></a-entity>
+
+
       <a-entity position="0 2.2 4">
       <a-entity camera look-controls wasd-controls id="camera"><a-entity mixin="ring" position="0 0 -3">
-        <a-animation begin="cursor-click" easing="ease-in" attribute="scale"
+        <a-animation begin="click" easing="ease-in" attribute="scale"
                fill="backwards" from="0.3 0.3 0.3" to="1 1 1"></a-animation>
-        <a-animation begin="cursor-fusing" easing="ease-in" attribute="scale"
+        <a-animation begin="fusing" easing="ease-in" attribute="scale"
                fill="forwards" from="1 1 1" to="0.3 0.3 0.3"></a-animation>
         <!-- <a-event-proxy name="animationend" matches="begin: cursor-click" emit="cursor-fusing"></a-event-proxy> -->
       </a-entity></a-entity>
       </a-entity>
-      <a-entity position="-1.5 2 0">
-        <a-entity mixin="red cube" id="redcube" visible="false">
-          <a-animation begin="cursor-click" attribute="position" from="0 0 0"
+      <a-entity position="-3.5 2 0">
+        <a-entity mixin="red cube" id="redcube">
+          <a-animation begin="click" attribute="position" from="0 0 0"
                        to="-2 -2 1" dur="2000" fill="both"></a-animation>
         </a-entity>
       </a-entity>
       <a-entity position="-1.5 2 0">
-        <a-entity mixin="blue cube" id="bluecube" visible="false">
-          <a-animation begin="cursor-click" attribute="position" from="0 0 0"
+        <a-entity mixin="blue cube" id="bluecube">
+          <a-animation begin="click" attribute="position" from="0 0 0"
                        to="-2 2 1" dur="2000" fill="both" repeats="1"></a-animation>
         </a-entity>
       </a-entity>
-      <a-entity position="-1.5 2 0">
-        <a-entity mixin="yellow cube" id="yellowcube" visible="false">
-          <a-animation begin="cursor-click" attribute="position" from="0 0 0"
+      <a-entity position="1.5 2 0">
+        <a-entity mixin="yellow cube" id="yellowcube" >
+          <a-animation begin="click" attribute="position" from="0 0 0"
                        to="2 -2 0" dur="1500" fill="both"></a-animation>
         </a-entity>
       </a-entity>
-      <a-entity position="-1.5 2 0">
+      <a-entity position="3.5 2 0">
         <a-entity mixin="green cube" id="greencube">
-          <a-animation begin="cursor-click" attribute="position" from="0 0 0"
-                       to="2 2 0" dur="1500" fill="both" id="greenani"></a-animation>
+          <a-animation begin="click" attribute="position" from="0 0 0"
+                       to="-7 2 1" dur="1500" fill="both" id="greenani"></a-animation>
         </a-entity>
       </a-entity>
       <!-- <a-entity position="-1.5 -2 0">
       <a-entity mixin="red sphere"></a-entity>
       </a-entity> -->
       <a-entity position="-1.8 -3 0"><a-plane  rotation="-45 0 0" width="2" height="1.6" src="#addtocart" id="cart">
-        <a-animation begin="cursor-click" attribute="scale" from="1 1 1" to="1.2 1.2 1.2" dur="1000"></a-animation>
+        <a-animation begin="click" attribute="scale" from="1 1 1" to="1.2 1.2 1.2" dur="1000"></a-animation>
       </a-plane></a-entity>
-      <!-- <a-entity position="0 0 0"><a-obj-model src="#num11"></a-obj-model></a-entity> -->
-      <!-- <a-entity id="numbers">
-        <a-entity position="-1.5 2.2 0"><a-plane id="price" width="3.6" height="3" src="#priceimg"></a-plane>
-        </a-entity>
-        <a-entity position="-1.5 0.55 0"><a-plane id="quantity" width="3.6" height="0.45" src="#quantityimg"></a-plane></a-entity>
-
-        <a-entity position="-1.5 0.2 0"><a-ring radius-inner="0.04" radius-outer="0.08" color="#36A3EB"></a-ring></a-entity>
-        <a-entity position="-1.5 0 0"><a-plane width="0.2" height="0.2" src="#num1"></a-plane></a-entity>
-
-        <a-entity position="-1.1 0.2 0"><a-ring radius-inner="0.04" radius-outer="0.08" color="#36A3EB"></a-ring></a-entity>
-        <a-entity position="-1.1 0.0 0"><a-plane width="0.2" height="0.2" src="#num2"></a-plane></a-entity>
-
-        <a-entity position="-0.7 0.2 0"><a-ring radius-inner="0.04" radius-outer="0.08" color="#36A3EB"></a-ring></a-entity>
-        <a-entity position="-0.7 0 0"><a-plane width="0.2" height="0.2" src="#num3"></a-plane></a-entity>
 
       </a-entity>
- -->
+
       <!-- <a-entity text="text: What's up;size:0.2" material="color: #5F818A"></a-entity> -->
 <!--       <a-entity geometry="primitive:box" position="-1.8 1.6 0"> -->
         <!-- <a-obj-model id="clothobj"  src="../models/man.obj" mtl="#manclothmtl"></a-obj-model> -->
@@ -503,7 +506,7 @@
       <a-entity mixin="red buy" id="fading-cube" material="opacity: 1" visible="false">
       <a-animation attribute="material.opacity" begin="fade" dur="5000" to="0.2" repeat="indefinite"></a-animation>
       </a-entity>
-      <a-entity mixin="enemy" geometry="primitive: box"></a-entity>
+      <a-entity mixin="enemy" geometry="primitive: box" position="0 0 0"></a-entity>
 <!--       <a-entity   geometry="primitive: box" material="opacity: 1">
         <a-animation attribute="material.opacity" begin="fade" to="0.2" dur="5000" repeat="indefinite"></a-animation>
       </a-entity> -->
@@ -594,6 +597,7 @@
         //     document.querySelector('#fading-cube').emit('fade');
         // },2000);
         //document.querySelector("#test1").emit("fade-out");
+        var camera=document.querySelector('#camera');
         var bluecube=document.querySelector('#bluecube');
         var yellowcube=document.querySelector('#yellowcube');
         var greencube=document.querySelector('#greencube');
@@ -605,76 +609,53 @@
         // var clothobj=document.querySelector('#clothobj');
         var myproduct=document.querySelector('#myproduct');
         var mycube=document.querySelector('#mycube');
-        var enemies = document.querySelectorAll('[mixin="enemy"]')[0];;
+        var enemies = document.querySelectorAll('[mixin="enemy"]')[0];
+        var particle=document.querySelector('#particle');
+        var sceneEl = document.querySelector('a-scene');
+        sceneEl.remove(particle.object3D);
         var status=0;
-        document.addEventListener('cursor-click',function(e){
-          if((!yellowcube.isPlaying)&&(!bluecube.isPlaying)&&(!redcube.isPlaying)&&(!greencube.isPlaying)){
-            status=1;
-          }else{
-            status=0;
-          }
+        document.addEventListener('click',function(e){
+          // if((!yellowcube.isPlaying)&&(!bluecube.isPlaying)&&(!redcube.isPlaying)&&(!greencube.isPlaying)){
+          //   status=1;
+          // }else{
+          //   status=0;
+          // }
           switch(e.target){
             case greencube: {
-              if(status==1&&!greencube.isPlaying){
-                bluecube.setAttribute('visible',false);
-                yellowcube.setAttribute('visible',false);
-                redcube.setAttribute('visible',false);
-                greencube.setAttribute('position','-2 2 1');
-                myproduct.setAttribute('products','mixin:greencube;price:30;');
-                // clothobj.setAttribute('visible',true);
-              }else{
-                yellowcube.setAttribute('visible', true);
-                setInterval(function(){
-                greencube.isPlaying=false;
-                },1500);
-              }
-                
+              bluecube.setAttribute('visible',false);
+              yellowcube.setAttribute('visible',false);
+              redcube.setAttribute('visible',false);
+              myproduct.setAttribute('products','mixin:greencube;price:30;');
+                  
+              var greenposition=e.target.parentElement.getAttribute("position");
+              var temp=new THREE.Vector3(greenposition.x*15/4,greenposition.y,-10);
+              particle.setAttribute("position",temp);
+              particle.setAttribute("particle-system","preset: default; texture: ./img/star2.png; color: #0000FF,#00FF00,#FF0000;maxParticleCount:100;rotationAngle:1.57");
+              camera.setAttribute("rotation",new Vector3(0,0,0));
               break;
             }
             case yellowcube:{
-              if(status==1&&!yellowcube.isPlaying){
-                bluecube.setAttribute('visible',false);
-                greencube.setAttribute('visible',false);
-                redcube.setAttribute('visible',false);
-                yellowcube.setAttribute('position','-2 2 1');
-                myproduct.setAttribute('products','mixin:yellowcube;price:20;');
-                // clothobj.setAttribute('visible',true);
-              }else{
-                bluecube.setAttribute('visible', true);
-                setInterval(function(){
-                  yellowcube.isPlaying=false;
-                },1500);                  
-              }
-
+              bluecube.setAttribute('visible',false);
+              greencube.setAttribute('visible',false);
+              redcube.setAttribute('visible',false);
+              yellowcube.setAttribute('position','-2 2 1');
+              myproduct.setAttribute('products','mixin:yellowcube;price:20;');                 
               break;
             }
             case bluecube: {
-              if(status==1&&!bluecube.isPlaying){
-                yellowcube.setAttribute('visible',false);
-                greencube.setAttribute('visible',false);
-                redcube.setAttribute('visible',false);
-                bluecube.setAttribute('position','-2 2 1');
-                myproduct.setAttribute('products','mixin:bluecube;price:10;');
-                // clothobj.setAttribute('visible',true);
-              }else{
-                redcube.setAttribute('visible', true);
-                setInterval(function(){
-                  bluecube.isPlaying=false;
-                },2000);
-              }
+              yellowcube.setAttribute('visible',false);
+              greencube.setAttribute('visible',false);
+              redcube.setAttribute('visible',false);
+              bluecube.setAttribute('position','-2 2 1');
+              myproduct.setAttribute('products','mixin:bluecube;price:10;');
               break;
             }
             case redcube: {
-              if(status==1&&!redcube.isPlaying){
-                yellowcube.setAttribute('visible',false);
-                greencube.setAttribute('visible',false);
-                bluecube.setAttribute('visible',false);
-                redcube.setAttribute('position','-2 2 1');
-                myproduct.setAttribute('products','mixin:bluecube;price:40;');
-                // clothobj.setAttribute('visible',true);
-              }else{
-                redcube.isPlaying=false;
-              }              
+              yellowcube.setAttribute('visible',false);
+              greencube.setAttribute('visible',false);
+              bluecube.setAttribute('visible',false);
+              redcube.setAttribute('position','-2 2 1');
+              myproduct.setAttribute('products','mixin:bluecube;price:40;');           
               break;
             }
             case cart:{
@@ -687,11 +668,21 @@
             case myproduct:{
               myproduct.setAttribute('products','mixin:cube;on:cursor-click');
             }
-            // case enemies:{
-            //   enemies.setAttribute('on','cursor-click222');
-            // }
+            case enemies:{
+              var greenposition=e.target.getAttribute("position");
+                var temp=new THREE.Vector3(0,-4,-10);
+                particle.setAttribute("position",temp);
+                particle.setAttribute("particle-system","preset: default; texture: ./img/star2.png; color: #0000FF,#00FF00,#FF0000;maxParticleCount:100;rotationAngle:1.57");
+               //enemies.setAttribute('on','cursor-click222');
+            }
           }
 
+        })
+
+        document.querySelector('#greenani').addEventListener('animationend',function(){
+          setInterval(function(){
+            particle.removeAttribute('particle-system');
+          },3000);
         })
 
     })();
