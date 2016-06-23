@@ -62,27 +62,71 @@
           var el = this.el;
           this.price=this.data.price;
           this.quantity=this.data.quantity;
-          var position = new THREE.Vector3(-2.8,1,0);
+          var position = new THREE.Vector3(-2.5,4,0);
           var entity = document.createElement('a-entity');
           entity.setAttribute('position',position);
           var pricestring="Price   \:$"+this.data.price;
           entity.setAttribute('text',"text:"+pricestring+";size:0.3");
           entity.setAttribute('material',"color:#5F818A");
 
+          // <a-plane id="cloth" src="#clothimg" position="-1.8 2.4 0" width="2" height="2" visible="false"></a-plane>
+          var productdes=document.createElement('a-plane');
+          productdes.setAttribute('src',"#ProductDes");
+          productdes.setAttribute('position',"-5 2.8 0");
+          productdes.setAttribute('rotation',"0 15 0");
+          productdes.setAttribute('width','3');
+          productdes.setAttribute('height','3');
+
+
+          var lineentity=document.createElement('a-entity');
+          lineentity.setAttribute('geometry',"primitive:cylinder;radius:0.01;height:3");
+          var lineentityposition=new THREE.Vector3(0.4,2.5,0);
+          lineentity.setAttribute('position',lineentityposition);
+          lineentity.setAttribute('material','color:#36A3EB');
+
+          var postageentity=document.createElement('a-entity');
+          var postagestring="postage";
+          postageentity.setAttribute('position',new THREE.Vector3(1.5,4,0));
+          postageentity.setAttribute('text',"text:"+postagestring+";size:0.3");
+          postageentity.setAttribute("material","color:#5F818A");
+
+          var freepostage=document.createElement('a-entity');
+          var freestring="Free postage";
+          freepostage.setAttribute('position',new THREE.Vector3(1.5,3.5,0));
+          freepostage.setAttribute('text',"text:"+freestring+";size:0.3");
+          freepostage.setAttribute("material","color:#9DE0AD");
+
+
           var entity2=document.createElement('a-entity');
-          var position2=new THREE.Vector3(-2.8,0.6,0);
+          var position2=new THREE.Vector3(1.5,2,0);
           entity2.setAttribute('position',position2);
-          var quantitystring="Quantity\:   "+this.data.quantity;
+          var quantitystring="Quantity \:   "+this.data.quantity;
           entity2.setAttribute('text',"text:"+quantitystring+";size:0.3");
           entity2.setAttribute('material',"color:#5F818A");
 
           var entitytotalprice=document.createElement('a-entity');
-          entitytotalprice.setAttribute('position',new THREE.Vector3(-2.8,0.2,0));
+          entitytotalprice.setAttribute('position',new THREE.Vector3(1.5,1.3,0));
           var totalpricestring="Total   \:$"+this.data.price*this.data.quantity.toFixed(2);
           entitytotalprice.setAttribute('text',"text:"+totalpricestring+";size:0.3");
-          entitytotalprice.setAttribute('material',"color:#5F818A");
+          entitytotalprice.setAttribute('material',"color:#9DE0AD");
 
-          document.querySelector("#cloth").setAttribute('visible',true);
+          // var productdes1=document.createElement('a-entity');
+          // productdes1.setAttribute('mixin',"productdes1");
+          // var productdes2=document.createElement('a-entity');
+          // productdes2.setAttribute('mixin',"productdes2");
+          // var productdes3=document.createElement('a-entity');  
+          // productdes3.setAttribute('mixin',"productdes3"); 
+          // var productdes4=document.createElement('a-entity');
+          // productdes4.setAttribute('mixin',"productdes4");
+          // var productdes5=document.createElement('a-entity');
+          // productdes5.setAttribute('mixin',"productdes5");
+          // var productdes6=document.createElement('a-entity');
+          // productdes6.setAttribute('mixin',"productdes6");
+          // var productdes7=document.createElement('a-entity');
+          // productdes6.setAttribute('mixin',"productdes7");    
+
+
+          // document.querySelector("#cloth").setAttribute('visible',true);
 
           var entityplus=document.createElement('a-entity');
           entityplus.setAttribute('mixin','plus');
@@ -105,21 +149,42 @@
           }.bind(this));
 
           var entityBuy=document.createElement('a-entity');
-          entityBuy.setAttribute('mixin',"red buy");
+          entityBuy.setAttribute('mixin',"green buy");
           entityBuy.material={"opacity":1};
-          var buyanimation=document.createElement('a-animation');
-          buyanimation.setAttribute('attribute','material.opacity');
-          buyanimation.setAttribute('begin','fade');
-          buyanimation.setAttribute('dur','5000');
-          buyanimation.setAttribute('to','0.2');
-          buyanimation.setAttribute('repeat','indefinite');
-          entityBuy.appendChild(buyanimation);
+          // var buyanimation=document.createElement('a-animation');
+          // buyanimation.setAttribute('attribute','material.opacity');
+          // buyanimation.setAttribute('begin','fade');
+          // buyanimation.setAttribute('dur','5000');
+          // buyanimation.setAttribute('to','0.2');
+          // buyanimation.setAttribute('repeat','indefinite');
+          // entityBuy.appendChild(buyanimation);
+
           entityBuy.addEventListener('click',function(){
-            entityBuy.setAttribute('visible',false);
-            var loading=document.createElement('a-entity');
-            loading.setAttribute("loading","on:hit");
-            this.el.sceneEl.appendChild(loading);
+            //开始写的loading效果
+            //entityBuy.setAttribute('visible',false);
+            // var loading=document.createElement('a-entity');
+            // loading.setAttribute("loading","on:hit");
+            // this.el.sceneEl.appendChild(loading);
+            var entitymove=document.createElement('a-entity');
+            entitymove.setAttribute('mixin','blue cube');
+            entitymove.setAttribute('position',"-1.5 2.5 0");
+            entitymove.setAttribute('scale',"0.5 0.5 0.5");
+            entitymove.setAttribute("particle-system","preset: default; texture: ./img/star2.png; color: #0000FF,#00FF00,#FF0000;maxParticleCount:100;rotationAngle:1.57");
+            setInterval(function(){
+              entitymove.removeAttribute('particle-system');
+            },5000);
+            var moveanimation=document.createElement('a-animation');
+            moveanimation.setAttribute('attribute',"position");
+            moveanimation.setAttribute('begin','0');
+            moveanimation.setAttribute('to',"-2 -1.2 0");
+            moveanimation.setAttribute('dur',"3000");
+            entitymove.appendChild(moveanimation);
+            el.sceneEl.appendChild(entitymove);
+            // position="-1.5 2.5 0"  scale="0.1 0.1 0.1"
           }.bind(this));
+
+          var entityProductDes=document.createElement('a-entity');
+          entityProductDes.setAttribute('mixin','productdes');
 
           
 
@@ -129,7 +194,18 @@
           el.sceneEl.appendChild(entitysub);
           el.sceneEl.appendChild(entitytotalprice);
           el.sceneEl.appendChild(entityBuy);
-
+          el.sceneEl.appendChild(entityProductDes);
+          el.sceneEl.appendChild(lineentity);
+          el.sceneEl.appendChild(postageentity);
+          el.sceneEl.appendChild(freepostage);
+          el.sceneEl.appendChild(productdes);
+          // el.sceneEl.appendChild(productdes1);
+          // el.sceneEl.appendChild(productdes2);
+          // el.sceneEl.appendChild(productdes3);
+          // el.sceneEl.appendChild(productdes4);
+          // el.sceneEl.appendChild(productdes5);
+          // el.sceneEl.appendChild(productdes6);
+          // el.sceneEl.appendChild(productdes7);
         }
 
       }
@@ -410,16 +486,37 @@
     AFRAME.registerComponent('ProductList',{
       schema:{
         on:{default:''},
-        mixin:{ default:'cube'},
+        mixin:{ default:'0'},
         position:{type:'vec3',default:{x:0,y:0,z:0}},
         status:{default:'0'},
-        id:{default:''}
+        id:{default:''},
+        src:{default:''},
+        mtl:{default:''},
+        scale:{default:''},
+        rotation:{default:''},
+        type:{default:'cube'}
       },
       update:function(){
         var el=this.el;
         var entity=document.createElement('a-entity');
         entity.setAttribute('position',this.data.position);
-        entity.setAttribute('mixin',this.data.mixin);
+        if(this.data.type=="obj"){
+          var objmodel=document.createElement('a-obj-model');
+          objmodel.setAttribute("src","#"+this.data.src);
+          objmodel.setAttribute("mtl","#"+this.data.mtl);
+          objmodel.setAttribute("scale",""+this.data.scale+" "+this.data.scale+" "+this.data.scale+"");
+          objmodel.setAttribute("rotation",this.data.rotation);
+          entity.appendChild(objmodel);
+          // <a-collada-model src="#guita" position="-1 0.5 1" rotation="0 45 0 " scale="1 1 1"></a-collada-model>
+        }else if(this.data.type=="collada"){
+          var colladamodel=document.createElement('a-collada-model');
+          colladamodel.setAttribute("src","#"+this.data.src);
+          colladamodel.setAttribute("rotation",this.data.rotation);
+          colladamodel.setAttribute("scale",""+this.data.scale+" "+this.data.scale+" "+this.data.scale+"");
+          entity.appendChild(colladamodel);
+        }else{
+          entity.setAttribute('mixin',this.data.mixin);
+        } 
         entity.setAttribute('class','aa');
         entity.setAttribute('material',"opacity: 1")
 
@@ -441,8 +538,16 @@
         animation3.setAttribute("attribute","position");
         animation3.setAttribute("begin","show");
         animation3.setAttribute("dur",2500);
-        animation3.setAttribute("to","-4 4 0");
+        animation3.setAttribute("to","-1.8 2 0");
         entity.appendChild(animation3);
+
+        var animation5=document.createElement('a-animation');
+        animation5.setAttribute("attribute","rotation");
+        animation5.setAttribute("begin","show");
+        animation5.setAttribute("dur",4000);
+        animation5.setAttribute("to","0 360 0");
+        animation5.setAttribute("repeat","indefinite");
+        entity.appendChild(animation5);
         
         var animation4=document.createElement('a-animation');
         animation4.setAttribute("attribute","material.opacity");
@@ -480,21 +585,31 @@
                 cursor=" fuse: true;maxDistance: 30;"></a-mixin>
         <a-mixin id="sphere" geometry="primitive:sphere"></a-mixin>
         <a-mixin id="black" material="color:#000000"></a-mixin>
-        <img id="addtocart" src="../img/addtocart.png">
-        <img id="removefromcart" src="../img/removefromcart.png">
-        <img id="priceimg" src="../img/price.jpg">
-        <img id="quantityimg" src="../img/quantity.jpg">
-        <img id="num1" src="../img/1.jpg">
-        <img id="num2" src="../img/2.jpg">
-        <img id="num3" src="../img/3.jpg">
+<!--         <img id="addtocart" src="../img/addtocart.png">
+        <img id="removefromcart" src="../img/removefromcart.png"> -->
         <img id="space" src="../img/spaceSky.jpg">
-        <img id="clothimg" src="../img/cloth.jpg" >
-        <!-- <a-asset-item id="mancloth" src="../models/man.obj"></a-asset-item>
-        <a-asset-item id="manclothmtl" src="../models/man.mtl"></a-asset-item> -->
-        <a-mixin id="sub" text="text:-;size:0.3" position="-1.0 0.6 0" material="color:#5F818A"></a-mixin>
-        <a-mixin id="plus" text="text:+;size:0.3" position="-0.5 0.6 0" material="color:#5F818A"></a-mixin>
-        <a-mixin id="buy" text="text:Buy Now!;size:0.3" position="-2.8 -0.2 0">
-        <a-mixin id="loadanimation" loading="on:hit">
+        <img id="clothimg" src="../img/cloth.jpg">
+        <img id="ProductDes" src="../img/ProductDes.jpg">
+<!--         <a-asset-item id="shoe1mtl" src="../models/sofa.mtl"></a-asset-item>
+        <a-asset-item id="shoe1obj" src="../models/sofa.obj"></a-asset-item> -->
+        <a-asset-item id="sofa" src="../models/sofa.dae"></a-asset-item>
+        <a-asset-item id="bike" src="../models/bike.dae"></a-asset-item>
+        <a-asset-item id="shoe2" src="../models/shoe2.dae"></a-asset-item>
+        <a-asset-item id="bag" src="../models/bag.dae"></a-asset-item>
+        <a-asset-item id="basket" src="../models/basket.dae"></a-asset-item>
+        <a-asset-item id="house" src="../models/house.dae"></a-asset-item>
+        <a-mixin id="sub" text="text:-;size:0.3" position="3.3 2 0" material="color:#9DE0AD"></a-mixin>
+        <a-mixin id="plus" text="text:+;size:0.3" position="4 2 0" material="color:#9DE0AD"></a-mixin>
+        <a-mixin id="buy" text="text:Add to Cart!;size:0.3" position="-2.8 1 0"></a-mixin>
+<!--         <a-mixin id="productdes1" text="text:At first glance, the TG-Tracker looks;size:0.16" material="color:#F1EA65" position="-6 2.9 0"></a-mixin>
+        <a-mixin id="productdes2" text="text:and easy to shoot. But there’s far more;size:0.16" material="color:#F1EA65" position="-6 2.7 0"></a-mixin>
+        <a-mixin id="productdes3" text="text:rugged and compact, easy to carry here;size:0.16" material="color:#F1EA65" position="-6 2.5 0"></a-mixin>
+        <a-mixin id="productdes4" text="text:than meets the eye.That’s because;size:0.16" material="color:#F1EA65" position="-6 2.3 0"></a-mixin>
+        <a-mixin id="productdes5" text="text:is part of the Olympus Tough Family;size:0.16" material="color:#F1EA65" position="-6 2.1 0"></a-mixin>
+        <a-mixin id="productdes6" text="text:camera built to handle abuse so you;size:0.16" material="color:#F1EA65" position="-6 1.9 0"></a-mixin>
+        <a-mixin id="productdes7" text="text:concentrate on getting great shots.;size:0.16" material="color:#F1EA65" position="-6 1.7 0"></a-mixin> -->
+        <!--      TG-Tracker is waterproof to depths of 100 ft (30 m), crushproof up to 220 lbf (100 kgf)1, shockproof from 7 ft (2.1 m)1, freezeproof to 14°F (-10°C), and dustproof. Most other action cams need protective housings. That means more stuff to carry around, clumsy camera operation, and a difficult time capturing sound. With TG-Tracker, no housing equals better overall performance. -->
+        <a-mixin id="loadanimation" loading="on:hit"></a-mixin>
         <a-mixin id="enemy"  explode="on: click"></a-mixin>
       </a-assets>
       <a-sky src="#space"></a-sky>
@@ -514,29 +629,30 @@
       </a-entity></a-entity>
       </a-entity>
 
-      <a-entity ProductList="mixin:red cube;position:-4.5 2 0;id:redcube" id="redcube"></a-entity>
-      <a-entity ProductList="mixin:blue cube;position:-1.5 2 0;id:bluecube" id="bluecube"></a-entity>
-      <a-entity ProductList="mixin:yellow cube;position:1.5 2 0;id:yellowcube" id="yellowcube"></a-entity>
-      <a-entity ProductList="mixin:green cube;position:4.5 2 0;id:greencube" id="greencube"></a-entity>
-      <!-- <a-entity position="-1.5 -2 0">
-      <a-entity mixin="red sphere"></a-entity>
-      </a-entity> -->
-      <a-entity position="-1.8 -3 0"><a-plane  rotation="-45 0 0" width="2" height="1.6" src="#addtocart" id="cart">
-        <a-animation begin="click" attribute="scale" from="1 1 1" to="1.2 1.2 1.2" dur="1000"></a-animation>
+      <a-entity ProductList="mixin:red cube;position:-4 2 0;id:redcube;src:sofa;type:collada;scale:0.045;rotation:0 45 0" id="redcube"></a-entity>
+      <a-entity ProductList="mixin:blue cube;position:-1.5 1.8 0;id:bluecube;src:bike;type:collada;scale:0.7;rotation:0 60 0" id="bluecube"></a-entity>
+      <a-entity ProductList="mixin:yellow cube;position:1.5 2 0;id:yellowcube;type:collada;src:shoe2;scale:0.3;rotation:0 115 0" id="yellowcube"></a-entity>
+      <a-entity ProductList="mixin:green cube;position:3.5 2 0;id:greencube;src:bag;type:collada;scale:2;rotation:0 -75 0" id="greencube"></a-entity>
+      <a-entity position="0 -4 0"><a-plane  rotation="-45 0 0" width="4" height="3" material="color:#FF5500">
       </a-plane></a-entity>
-
-      <a-entity position="-4.5 -1.2 0" text="text:Add to cart;size:0.4" rotation="-45 0 0" material="color:#9DE0AD" id="addtext"></a-entity>
-      <a-entity position="-1 -1.2 0" text="text:Product List;size:0.4" rotation="-45 0 0" material="color:#9DE0AD" id="inittext"></a-entity>
-      <a-entity position="-2 4.5 0" text="text:Welcome!;size:0.5" material="color:#F35F5F" id="warningtext"></a-entity>
-      <a-entity position="-3 -2.4 0" rotation="-45 0 0" text="text:0;size:0.4" material="color:#36A3EB"></a-entity>
+      <a-collada-model position="-2 -1.2 0" src="#basket" scale="0.3 0.3 0.3" id="basketbutton"></a-collada-model>
+      <a-entity position="-4.5 -1.2 0" text="text:Basket;size:0.4" rotation="-15 0 0" material="color:#FF5500" ></a-entity>
+      <a-entity position="3.2 -1.2 0" text="text:Shop;size:0.4" rotation="-15 0 0" material="color:#FF5500" ></a-entity>
+      <a-collada-model position="2 -1.2 0" src="#house" scale="100 100 100" id="shop"></a-collada-model>
+      <a-entity mixin="blue cube" position="-1.5 2.5 0"  scale="0.1 0.1 0.1" id="add" visible="false">
+        <a-animation attribute="position" begin="move" dur="3000" to="-2 -1.2 0">
+        </a-animation>
+      </a-entity>
 
       </a-entity>
 
+<!--       <a-obj-model id="mychair" src="../models/shoe1.obj" mtl="../models/shoe1.mtl" scale="0.02 0.02 0.02" rotation="0 90 0"></a-obj-model> -->
+<!--       <a-collada-model src="../models/house.dae" position="-1 0.5 1" rotation="0 45 0 " scale="1 1 1"></a-collada-model> -->
       <!-- <a-entity text="text: What's up;size:0.2" material="color: #5F818A"></a-entity> -->
 <!--       <a-entity geometry="primitive:box" position="-1.8 1.6 0"> -->
         <!-- <a-obj-model id="clothobj"  src="../models/man.obj" mtl="#manclothmtl"></a-obj-model> -->
 <!--       </a-entity> -->
-      <a-plane id="cloth" src="#clothimg" position="-1.8 2.4 0" width="2" height="2" visible="false"></a-plane>
+<!--       <a-plane id="cloth" src="#clothimg" position="-1.8 2.4 0" width="2" height="2" visible="false"></a-plane> -->
       <a-entity id="myproduct" products></a-entity>
       <!-- 蓝色的loading -->
       <!-- <a-entity id="mycube" mixin="blue mybox" rotation="45 45 45"><a-animation attribute="rotation"
@@ -549,6 +665,13 @@
       <a-entity mixin="red buy" id="fading-cube" material="opacity: 1" visible="false">
       <a-animation attribute="material.opacity" begin="fade" dur="5000" to="0.2" repeat="indefinite"></a-animation>
       </a-entity>
+      <!-- <a-entity mixin="productdes1"></a-entity>
+      <a-entity mixin="productdes2"></a-entity>
+      <a-entity mixin="productdes3"></a-entity>
+      <a-entity mixin="productdes4"></a-entity>
+      <a-entity mixin="productdes5"></a-entity>
+      <a-entity mixin="productdes6"></a-entity>
+      <a-entity mixin="productdes7"></a-entity> -->
 <!--       <a-entity   geometry="primitive: box" material="opacity: 1">
         <a-animation attribute="material.opacity" begin="fade" to="0.2" dur="5000" repeat="indefinite"></a-animation>
       </a-entity> -->
@@ -628,22 +751,18 @@
         // },2000);
         //document.querySelector("#test1").emit("fade-out");
         var camera=document.querySelector('#camera');
-        var bluecube=document.querySelector('#bluecube');
-        var yellowcube=document.querySelector('#yellowcube');
-        var greencube=document.querySelector('#greencube');
-        var redcube=document.querySelector('#redcube');
-        var cart=document.querySelector('#cart');
         var price=document.querySelector('#price');
         var quantity = document.querySelector('#quantity');
         var numbers=document.querySelector('#numbers');
         // var clothobj=document.querySelector('#clothobj');
         var myproduct=document.querySelector('#myproduct');
+        var basket=document.querySelector("#basketbutton");
         var mycube=document.querySelector('#mycube');
         var particle=document.querySelector('#particle');
         var sceneEl = document.querySelector('a-scene');
-        var inittext=document.querySelector("#inittext");
-        var warningtext=document.querySelector('#warningtext');
-        var addtext=document.querySelector('#addtext');
+        var shop=document.querySelector("#shop");
+        var add=document.querySelector("#add");
+        var addbutton=document.querySelector('a-entity[mixin="green buy"]');
         sceneEl.remove(particle.object3D);
         var status=0;
         document.addEventListener('click',function(e){
@@ -653,54 +772,27 @@
           //   status=0;
           // }
           switch(e.target){
-            case greencube: {
-              bluecube.setAttribute('visible',false);
-              yellowcube.setAttribute('visible',false);
-              redcube.setAttribute('visible',false);
-              myproduct.setAttribute('products','mixin:greencube;price:30;');
-                  
-              var greenposition=e.target.parentElement.getAttribute("position");
-              var temp=new THREE.Vector3(greenposition.x*15/4,greenposition.y,-10);
-              particle.setAttribute("position",temp);
-              particle.setAttribute("particle-system","preset: default; texture: ./img/star2.png; color: #0000FF,#00FF00,#FF0000;maxParticleCount:100;rotationAngle:1.57");
-              camera.setAttribute("rotation",new Vector3(0,0,0));
-              break;
-            }
-            case yellowcube:{
-              // bluecube.setAttribute('visible',false);
-              // greencube.setAttribute('visible',false);
-              // redcube.setAttribute('visible',false);
-              // yellowcube.setAttribute('position','-2 2 1');
-              // myproduct.setAttribute('products','mixin:yellowcube;price:20;');                 
-              // break;
-            }
-            case bluecube: {
-
-            }
-            case redcube: {
-              // yellowcube.setAttribute('visible',false);
-              // greencube.setAttribute('visible',false);
-              // bluecube.setAttribute('visible',false);
-              // redcube.setAttribute('position','-2 2 1');
-              // myproduct.setAttribute('products','mixin:bluecube;price:40;');           
-              // break;
-            }
-            case cart:{
-              if(cart.getAttribute('src')=='#addtocart')
-                cart.setAttribute('src','#removefromcart');
-              else
-                cart.setAttribute('src','#addtocart');
-              break;
-            }
             case myproduct:{
               myproduct.setAttribute('products','mixin:cube;on:click');
+              break;
             }
-            case inittext:{
+            case shop:{
               window.location.reload();
+              break;
             }
-            case addtext:{
-              warningtext.setAttribute('text',"text:111");
-            } 
+            case addbutton:{
+              // /add.setAttribute("visible","true");
+              add.emit('move');
+              add.setAttribute("particle-system","preset: default; texture: ./img/star2.png; color: #0000FF,#00FF00,#FF0000;maxParticleCount:100;rotationAngle:1.57");
+              setInterval(function(){
+                add.removeAttribute('particle-system');
+              },5000);
+
+            }
+            case basket:{
+              window.location.href="cart.html";
+              break;
+            }
           }
 
         })
@@ -749,7 +841,7 @@
             }else{
               if(el.states.indexOf("ended")>=0)
                 return;
-              el.setAttribute("loadingline","radius:0.2;pointposition:"+el.getAttribute("position").x*1.2+" 0.5 0");
+              el.setAttribute("loadingline","radius:0.2;pointposition:"+el.getAttribute("position").x*1.2+" 1 0");
               document.querySelector('.loadingline').addEventListener('animationend',function(){
               el.addState('ended');
               //结束消失隐藏
@@ -770,7 +862,7 @@
               el.setAttribute("particle-system","preset: default; texture: ./img/star2.png; color: #0000FF,#00FF00,#FF0000;maxParticleCount:100;rotationAngle:1.57");
               setInterval(function(){
                 el.removeAttribute('particle-system');
-              },4000);
+              },5000);
                   
               document.querySelectorAll(".loadingentity").forEach(function(l){
                 l.setAttribute("visible",false);

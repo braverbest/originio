@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Shopping</title>
+    <meta name="description" content="Cursor - A-Frame">
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="https://aframe.io/releases/0.2.0/aframe.js"></script>
+    <script src="../js/aframe-text-component.js"></script>
+    <script src="../js/aframe-particle-system-component.js"></script>
+    <script type="text/javascript">
+    </script>
+  </head>
+  <body>
+  <script>
+    AFRAME.registerComponent('loading',{
+      schema:{
+        on:{default:''}
+      },
+      update:function(){
+        var entity=document.createElement('a-entity');
+        entity.setAttribute('mixin',"blue mybox");
+        entity.setAttribute("position","1.5 -0.5 0")
+        entity.setAttribute('rotation',"45 45 45")
+        var animation1=document.createElement('a-animation');
+        animation1.setAttribute("attribute","rotation");
+        animation1.setAttribute("dur",500);
+        animation1.setAttribute("fill","forwards");
+        animation1.setAttribute("to","45 360 45");
+        animation1.setAttribute("repeat","indefinite");
+        entity.appendChild(animation1);
+        var animation2=document.createElement('a-animation');
+        animation2.setAttribute("attribute","position");
+        animation2.setAttribute("dur",5000);
+        // animation2.setAttribute("from","1.5 -0.6 0");
+        animation2.setAttribute("to","5 -0.5 0");
+        entity.appendChild(animation2);
+        entity.play();
+        this.el.sceneEl.appendChild(entity);
+        setInterval(function(){
+          this.remove();
+        }.bind(this),3500);
+      },
+      remove:function(){
+        var endEl = document.querySelector('.end-screen');
+        endEl.style.display = 'block';
+      }
+    })
+
+    AFRAME.registerComponent('CartList',{
+      schema:{
+        position:{type:'vec3',default:{x:0,y:0,z:0}},
+        type:{default:'cube'},
+        src:{default:''},
+        scale:{default:''},
+        rotation:{default:''}
+      },
+      //  <a-entity id="bikeentity">
+      //     <a-collada-model position="-1.8 3 0" src="#bike" scale="0.7 0.7 0.7" rotation="0 60 0"></a-collada-model>
+      //     <a-entity text="text:quantity  : 1;size:0.3" position="-2.5 2.5 0" material="color:#5F818A"></a-entity>
+      //     <a-entity text="text:style  : blue;size:0.3" position="-2.5 1.9 0" material="color:#5F818A"></a-entity>
+      //     <a-entity text="text:Price  : $30;size:0.3" position="-2.5 1.3 0" material="color:#5F818A"></a-entity>
+      //     <a-entity text="text:X;size:0.3" position="-0.5 4.2 0" material="color:#F35F5F"></a-entity>
+      // </a-entity>
+      update:function(){
+        var entity=document.createElement('a-entity');
+
+        if(this.data.type=="collada"){
+          var collada=document.createElement('a-collada-model');
+          collada.setAttribute('position',this.data.position);
+          collada.setAttribute('src',"#"+this.data.src);
+          collada.setAttribute('scale',""+this.data.scale+" "+this.data.scale+" "+this.data.scale);
+          collada.setAttribute('rotation',this.data.rotation);
+          entity.appendChild(collada);
+        }        
+
+        var entity2=document.createElement('a-entity');
+        entity2.setAttribute('text',"text:quantity  : 1;size:0.3");
+        entity2.setAttribute('position',""+(this.data.position.x-0.7)+" "+(this.data.position.y-0.5)+" "+(this.data.position.z));
+        entity2.setAttribute('material',"color:#5F818A");
+        entity.appendChild(entity2);
+
+        var entity3=document.createElement('a-entity');
+        entity3.setAttribute('text',"text:style  : blue;size:0.3");
+        entity3.setAttribute('position',""+(this.data.position.x-0.7)+" "+(this.data.position.y-1.1)+" "+(this.data.position.z));
+        entity3.setAttribute('material',"color:#5F818A");
+        entity.appendChild(entity3);
+
+        var entity4=document.createElement('a-entity');
+        entity4.setAttribute('text',"text:Price  : $30;size:0.3");
+        entity4.setAttribute('position',""+(this.data.position.x-0.7)+" "+(this.data.position.y-1.7)+" "+(this.data.position.z));
+        entity4.setAttribute('material',"color:#5F818A");
+        entity.appendChild(entity4);
+
+        var entity5=document.createElement('a-entity');
+        entity5.setAttribute('text',"text:X;size:0.4");
+        entity5.setAttribute('position',""+(this.data.position.x+1.3)+" "+(this.data.position.y+1.2)+" "+(this.data.position.z));
+        entity5.setAttribute('material',"color:#F35F5F");
+        entity.appendChild(entity5);
+        entity5.addEventListener('click',function(){
+          entity.setAttribute('visible',"false");
+        });
+
+        this.el.sceneEl.appendChild(entity);
+      }
+    })
+
+    AFRAME.registerComponent('BuyButton',{
+      schema:{
+      },
+      update:function(){
+         var el=this.el;
+
+         // <a-entity text="text:Buy Now!;size:0.4" position="1.5 -0.6 0" material="color:#F35F5F" id="BuyButton"></a-entity>
+         var entity=document.createElement('a-entity');
+         entity.setAttribute('text',"text:Buy Now!;size:0.4");
+         entity.setAttribute('position',"1.5 -0.6 0");
+         entity.setAttribute('material',"color:#F35F5F");
+         entity.addEventListener('click',function(){
+            entity.setAttribute('visible',"false");
+            var entity2=document.createElement('a-entity');
+            entity2.setAttribute('loading',"on:click");
+            this.el.sceneEl.appendChild(entity2);
+         }.bind(this));
+
+         el.sceneEl.appendChild(entity);
+      }
+    });
+
+
+    
+  </script>
+    <div class="screen end-screen">
+      <div class="end">You Have Bought the Product!Congradulations!</div>
+      <div class="end">Made with <a href="http://www.aframevr.io">A-FRAME</a></div>
+    </div>
+    <a-scene>
+      <a-assets>
+        <a-mixin id="cube" geometry="primitive:box"></a-mixin>
+        <a-mixin id="mybox" geometry="primitive:box;width:0.4;height:0.4;depth:0.4"></a-mixin>
+        <a-mixin id="red" material="color: #F35F5F"></a-mixin>
+        <a-mixin id="blue" material="color: #36A3EB"></a-mixin>
+        <a-mixin id="green" material="color: #9DE0AD"></a-mixin>
+        <a-mixin id="yellow" material="color: #F1EA65"></a-mixin>
+        <a-mixin id="ring" geometry="primitive: ring; radiusOuter: 0.20;
+                          radiusInner: 0.15;"
+                material="color: cyan; shader: flat"
+                cursor=" fuse: true;maxDistance: 30;"></a-mixin>
+        <img id="space" src="../img/spaceSky.jpg">
+        <!-- <a-asset-item id="mancloth" src="../models/man.obj"></a-asset-item>
+        <a-asset-item id="manclothmtl" src="../models/man.mtl"></a-asset-item> -->
+        <a-asset-item id="bike" src="../models/bike.dae"></a-asset-item>
+        <a-asset-item id="shoe2" src="../models/shoe2.dae"></a-asset-item>
+        <a-asset-item id="basket" src="../models/basket.dae"></a-asset-item>
+        <a-asset-item id="house" src="../models/house.dae"></a-asset-item>
+        <a-mixin id="sub" text="text:-;size:0.3" position="-1.0 0.6 0" material="color:#5F818A"></a-mixin>
+        <a-mixin id="plus" text="text:+;size:0.3" position="-0.5 0.6 0" material="color:#5F818A"></a-mixin>
+        <a-mixin id="buy" text="text:Buy Now!;size:0.3" position="-2.8 -0.2 0">
+        <a-mixin id="loadanimation" loading="on:hit">
+      </a-assets>
+      <a-sky src="#space"></a-sky>
+<!--       <a-entity position="0 2.25 -15" particle-system="preset: default; texture: ./img/star2.png; color: #0000FF,#00FF00,#FF0000"></a-entity> -->
+       <a-entity position="0 2.2 4">
+      <a-entity camera look-controls wasd-controls id="camera"><a-entity mixin="ring" position="0 0 -3">
+        <a-animation begin="click" easing="ease-in" attribute="scale"
+               fill="backwards" from="0.3 0.3 0.3" to="1 1 1"></a-animation>
+        <a-animation begin="fusing" easing="ease-in" attribute="scale"
+               fill="forwards" from="1 1 1" to="0.3 0.3 0.3"></a-animation>
+        <!-- <a-event-proxy name="animationend" matches="begin: cursor-click" emit="cursor-fusing"></a-event-proxy> -->
+      </a-entity></a-entity>
+      </a-entity>
+
+      <!-- <a-entity position="-1.5 2 0">
+        <a-entity mixin="green cube" id="greencube">
+          <a-animation begin="cursor-click" attribute="position" from="0 0 0"
+                       to="2 2 0" dur="1500" fill="both" id="greenani"></a-animation>
+        </a-entity>
+      </a-entity>
+ -->
+      <!-- <a-entity id="bikeentity">
+          <a-collada-model position="-1.8 3 0" src="#bike" scale="0.7 0.7 0.7" rotation="0 60 0"></a-collada-model>
+          <a-entity text="text:quantity  : 1;size:0.3" position="-2.5 2.5 0" material="color:#5F818A"></a-entity>
+          <a-entity text="text:style  : blue;size:0.3" position="-2.5 1.9 0" material="color:#5F818A"></a-entity>
+          <a-entity text="text:Price  : $30;size:0.3" position="-2.5 1.3 0" material="color:#5F818A"></a-entity>
+          <a-entity text="text:X;size:0.3" position="-0.5 4.2 0" material="color:#F35F5F"></a-entity>
+      </a-entity> -->
+      <a-entity CartList="position:-1.8 3 0;src:bike;type:collada;scale:0.7;rotation:0 60 0"></a-entity>
+      <a-entity CartList="position:1.2 3 0;src:shoe2;type:collada;scale:0.3;rotation:0 115 0"></a-entity>
+
+      <a-entity>
+        <a-entity text="text:Delivery Address;size:0.3" position="-6 3 0" material="color:#5F818A"></a-entity>
+        <a-entity text="text:NanJing JiangSu;size:0.23" position="-6 2.5 0" material="color:#5F818A"></a-entity>
+        <a-entity text="text:GuLou Distinct;size:0.23" position="-6 2.0 0" material="color:#5F818A"></a-entity>
+        <a-entity text="text:AllPass Company;size:0.23" position="-6 1.5 0" material="color:#5F818A"></a-entity>
+      </a-entity>
+
+      <a-entity>
+          <a-entity text="text:TotalPrice : $90;size:0.4" position="1.5 0 0" material="color:#F35F5F"></a-entity>
+<!--           <a-entity text="text:Buy Now!;size:0.4" position="1.5 -0.6 0" material="color:#F35F5F" id="BuyButton"></a-entity> -->
+          <a-entity BuyButton></a-entity>
+      </a-entity>
+
+      <a-entity mixin="red buy" id="fading-cube" material="opacity: 1" visible="false">
+      <a-animation attribute="material.opacity" begin="fade" dur="5000" to="0.2" repeat="indefinite"></a-animation>
+      </a-entity>
+
+      <a-collada-model position="-2 -1.8 0" src="#basket" scale="0.3 0.3 0.3" id="basketbutton"></a-collada-model>
+      <a-entity position="-4.5 -1.8 0" text="text:Basket;size:0.4" rotation="-15 0 0" material="color:#FF5500" ></a-entity>
+      <a-entity position="3.2 -1.8 0" text="text:Shop;size:0.4" rotation="-15 0 0" material="color:#FF5500" ></a-entity>
+      <a-collada-model position="2 -1.8 0" src="#house" scale="100 100 100" id="shop"></a-collada-model>
+      <a-entity position="0 -4 0"><a-plane  rotation="-45 0 0" width="4" height="3" material="color:#FF5500">
+      </a-plane></a-entity>
+    </a-scene>  
+    <script>
+    (function(){          
+        var buy=document.querySelector("#BuyButton");
+        var basket=document.querySelector("#basketbutton");
+        var shop=document.querySelector("#shop");
+        document.addEventListener("click",function(e){
+          switch(e.target){
+            case buy:{
+              var entity=document.createElement('entity');
+              entity.setAttribute("loading","on:click");
+              break;
+            }
+            case basket:{
+              window.location.reload();
+              break;
+            }
+            case shop:{
+              window.location.href="shopping2.html";
+              break;
+            }
+          }
+           
+        });
+    })();
+    </script>
+  </body>
+</html>
