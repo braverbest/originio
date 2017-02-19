@@ -1,0 +1,46 @@
+{
+  "code": 200,
+  "message": "获取成功",
+  "data": [
+    {
+      "tid": "1",
+      "title": "如何去下一个订单？",
+      "thumbnail": "adv.jpg",
+      "advertiser": "李女士",
+      "read_profit": "8",
+      "type": "0",
+      "status": "1",
+      "created": "1452139945"
+    },
+    {
+      "tid": "2",
+      "title": "我如何去申请为排班护士？",
+      "thumbnail": "adv.jpg",
+      "advertiser": "王小姐",
+      "status": "1",
+      "type": "1",
+      "read_profit": "5",
+      "created": "1452094126"
+    },
+    {
+      "tid": "2",
+      "title": "可以申请医保报销吗？",
+      "thumbnail": "adv.jpg",
+      "advertiser": "王小姐",
+      "status": "1",
+      "type": "1",
+      "read_profit": "5",
+      "created": "1452094126"
+    },
+    {
+      "tid": "2",
+      "title": "如何实施PICC冲管？",
+      "thumbnail": "adv.jpg",
+      "advertiser": "曹小姐",
+      "status": "1",
+      "type": "1",
+      "read_profit": "5",
+      "created": "1452094126"
+    }
+  ]
+}
